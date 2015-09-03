@@ -47,7 +47,8 @@ Please send comments, suggestions, and bug reports (with version number and
 the keyword "checklistings" in the subject of the message) to
 <tim@tbrk.org>. Please keep in mind that we prefer to keep `checklistings`
 simple and lightweight rather than to incorporate many different
-configuration and customization options.
+configuration and customization options. The source code is hosted on 
+[GitHub](https://github.com/tbrk/checklistings).
 
 This package was developed within the
 [PARKAS](http://www.di.ens.fr/ParkasTeam.html) at
