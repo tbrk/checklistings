@@ -1,5 +1,5 @@
 
-all: checklistings.sty checklistings.pdf
+all: checklistings.sty checklistings.pdf example.pdf
 
 checklistings.pdf: checklistings.dtx checklistings.ind checklistings.sty \
     		   checklistings.chkl
