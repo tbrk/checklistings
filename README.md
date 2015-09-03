@@ -42,6 +42,7 @@ The `checklistings` package may be distributed and/or modified under the
 conditions of the
 [LaTeX Project Public License](http://www.latex-project.org/lppl.txt),
 either version 1.2 of this license or (at your option) any later version.
+It is available on [CTAN](http://www.ctan.org/pkg/checklistings).
 
 Please send comments, suggestions, and bug reports (with version number and
 the keyword "checklistings" in the subject of the message) to
