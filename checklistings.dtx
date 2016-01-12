@@ -68,7 +68,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{444}
+% \CheckSum{457}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -459,6 +459,11 @@ let w = u + "four"
 % This is the default behaviour unless the |hideproblems| package option was 
 % set.
 % \\
+% compilerflags
+% & Flags passed to the compiler for a specific example.
+% These flags are given after those of the package-level |compilerflags|
+% setting and before those of the package-level |lastflags| setting.
+% These \emph{are} revealed by |\chklistingcmd|.
 % \end{longtable}
 %
 % The results of compiling the code of a |chklisting| environment are made 
@@ -776,6 +781,16 @@ let w = u + "four"
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\CHKL@lcompilerflags}
+% Defines compiler flags to be used for a specific example (before those of
+% the global |\CHKL@compilerflags|). It is empty by default, but may be
+% altered by the environment option |compilerflags|.
+% This value is only used to generate the |flags=| field in the |.chkl| file.
+% \begin{macrocode}
+\edef\CHKL@lcompilerflags{\null}
+%    \end{macrocode}
+% \end{macro}
+%
 % The |keyval| package\footnote{\url{http://www.ctan.org/pkg/keyval}} is 
 % used to parse environment options.
 % The following macros setup parameters used by the |chklisting| 
@@ -815,6 +830,7 @@ let w = u + "four"
 \define@key{CHKL@envkeys}{hide}[]{\CHKL@showcodefalse}
 \define@key{CHKL@envkeys}{withresult}[]{\CHKL@withresulttrue}
 \define@key{CHKL@envkeys}{withoutresult}[]{\CHKL@withresultfalse}
+\define@key{CHKL@envkeys}{compilerflags}[]{\edef\CHKL@lcompilerflags{#1}}
 \define@key{CHKL@envkeys}{showproblems}[]{\CHKL@showproblemstrue}
 \define@key{CHKL@envkeys}{hideproblems}[]{\CHKL@showproblemsfalse}
 %    \end{macrocode}
@@ -905,6 +921,7 @@ let w = u + "four"
 %    \begin{macrocode}
     \CHKL@logsample{\arabic{chklisting}}{\CHKL@continue%
       \space\ifnum\CHKL@skip>0[skip=\CHKL@skip]\fi%
+      \ifx\CHKL@lcompilerflags\null\else\space[flags=\CHKL@lcompilerflags]\fi%
       \ifCHKL@shouldfail\space[fail]\fi}%
 %    \end{macrocode}
 %
