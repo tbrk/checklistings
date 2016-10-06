@@ -23,6 +23,7 @@ BLUE="[0;34m"
 BLACK="[0;0m"
 
 ADJUSTLINETEXT=line
+FOLD=cat # "fold -s -w 47" # format compiler output
 
 ##
 # Command-line
@@ -268,7 +269,7 @@ compile() {
     else
 	sed -e "s#$SUBDIR$ifile#$PREFIX#g"		\
 	    -e "s#$IFILENAME[0-9][0-9][0-9][0-9]\.##g"	\
-	    "$OUTFILE"				      > "$opath_msg"
+	    "$OUTFILE" | $FOLD			      > "$opath_msg"
 	cat "$opath_msg"			      >> "$opath"
     fi
     printf "%s\n" '\end{ChkListingMsg}'		      >> "$opath"
@@ -280,7 +281,7 @@ compile() {
     else
 	sed -e "s#$SUBDIR$ifile#$PREFIX#g"		\
 	    -e "s#$IFILENAME[0-9][0-9][0-9][0-9]\.##g"	\
-	    "$ERRFILE"				      > "$opath_err"
+	    "$ERRFILE" | $FOLD			      > "$opath_err"
 	cat "$opath_err"			      >> "$opath"
     fi
     printf "%s\n" '\end{ChkListingErr}'		      >> "$opath"
