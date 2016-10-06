@@ -163,7 +163,7 @@ makeicfilename() {
 adjustlinenumbers() {
     if [ -n "$ADJUSTLINETEXT" ]; then
 	printf '' > "$ERRFILE-adjusted" 
-	while read line
+	while read -r line
 	do
 	    linen=$(expr "$line" : ".*$ADJUSTLINETEXT  *\([0-9][0-9]*\).*")
 	    if [ -n "$linen" ]; then
@@ -251,7 +251,7 @@ compile() {
 	if [ "$SHOULDFAIL" -eq 0 ]; then
 	    printf "%s  unexpected failure (line %s / page %s)!%s\n" \
 		"$RED" "$LINENUM" "$PAGENUM" "$BLACK" >&2
-	    while read line
+	    while read -r line
 	    do
 	      printf "  | %s\n" "$line"
 	    done < "$ERRFILE" >&2
@@ -355,7 +355,7 @@ readchkl() {
     unset l existing openfilenums filenum opennums
 
     # Process each line of the command file
-    while read l; do
+    while read -r l; do
 	addedlines=0
 	case $l in
 	    [[:digit:]]*:*)
