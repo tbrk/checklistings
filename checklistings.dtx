@@ -1017,7 +1017,7 @@ let w = u + "four"
         \ifCHKL@shouldfail%
             \ifchklisting%
                 \PackageWarning{checklistings}%
-                    {Compilation of \CHKL@file\CHKL@ext\space should have failed}%
+                    {\CHKL@file\CHKL@ext\space success}%
                 \ifCHKL@showproblems%
                   \UseVerbatim[frame=single,
                                label=Unexpected success,
@@ -1036,7 +1036,7 @@ let w = u + "four"
                 \fi%
             \else%
                 \PackageWarning{checklistings}%
-                    {Compilation of \CHKL@file\CHKL@ext\space should not have failed}%
+                    {\CHKL@file\CHKL@ext\space failure}%
                 \ifCHKL@showproblems%
                   \UseVerbatim[frame=single,
                                label=Unexpected failure,
