@@ -4,6 +4,7 @@ Withopen0000.ml
 Withopen0001.ml
 Withopen0002.ml
 Withopen0003.ml
+Withopen0004.ml
 *.aux
 *.glo
 *.hd
@@ -25,6 +26,12 @@ chklisting0001.tex
 chklisting0002.err
 chklisting0002.ml
 chklisting0002.tex
+chklisting0003.msg
+chklisting0003.ml
+chklisting0003.tex
+chklisting0004.msg
+chklisting0004.ml
+chklisting0004.tex
 example.chkl
 example.log
 example.synctex.gz

@@ -68,7 +68,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{457}
+% \CheckSum{465}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -481,20 +481,59 @@ let w = u + "four"
 % of the code sample, which becomes simply \meta{prefix}|.|\meta{ext}.
 %
 % \item[\texttt{\string\chklistingmsg\marg{label}}]
-% \DescribeMacro{\chklistingmsg}: inserts the verbatim text emitted by the 
-% compiler, provided compilation succeeded, for the |chklisting| 
-% environment labelled \meta{label}.
+% \DescribeMacro{\chklistingmsg} inserts the verbatim text emitted by the 
+% compiler, provided compilation succeeded, for the |chklisting| environment 
+% labelled \meta{label}.
 % When \meta{label} is left empty, the message for the last environment is 
 % inserted.
 % It should not be used after environments marked |fail|.
 %
 % \item[\texttt{\string\chklistingerr\marg{label}}]
-% \DescribeMacro{\chklistingerr}: inserts the verbatim text emitted by the 
+% \DescribeMacro{\chklistingerr} inserts the verbatim text emitted by the 
 % compiler, provided compilation failed, for the |chklisting| environment 
 % labelled \meta{label}.
 % When \meta{label} is left empty, the message for the last environment is 
 % inserted.
 % It should only be used after environments marked |fail|.
+%
+% \item[\texttt{\string\chklistingcurrfile}]
+% \DescribeMacro{\chklistingcurrfile} contains the path to the file created 
+% for the code sample.
+% \end{description}
+%
+% The following macros are provided for working with the contents of 
+% |chklisting| environments.
+% \begin{description}
+%
+% \item[\texttt{\string\chklistinginput\marg{filename}}]
+% \DescribeMacro{\chklistinginput}: loads the specified file as verbatim 
+% text according to the |codestyle| and |codelst| display options.
+% One use for this macro is to define a block of code in one place so that 
+% it can be included in other code blocks, but to actually present the 
+% definitions at a later point.
+% For instance,
+% \iffalse
+%<*example>
+% \fi
+\begin{LTXexample}[width=4cm]
+\begin{chklisting}[hide,label=f]
+let f x = x + 1
+\end{chklisting}
+
+\edef\fcode{\chklistingcurrfile}
+
+We define \verb|g| as follows,
+\begin{chklisting}[withresult, continue]
+let g x = f x + f x
+\end{chklisting}
+where \verb|f| was defined as
+\chklistinginput{\fcode}
+\chklistingmsg{f}
+\end{LTXexample}
+% \iffalse
+%</example>
+% \fi
+%
 % \end{description}
 %
 % \subsection{The \texttt{checklistings.sh} script}\label{sec:rvsh}
@@ -886,9 +925,28 @@ let w = u + "four"
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\chklistinginput}
+%
+% Load the given filename, normally |\chklistingcurrfile| into a verbatim 
+% environment using |\CHKL@verbopts|.
+%
+%    \begin{macrocode}
+\newcommand{\chklistinginput}[1]{%
+    \bgroup%
+    \ifx\CHKL@codelst\CHKL@emptyoption\else%
+      \expandafter\lstset\expandafter{\CHKL@codelst,fancyvrb=true}%
+    \fi%
+    \expandafter\fvset\expandafter{\CHKL@pkg@verbopts}%
+    \expandafter\VerbatimInput\expandafter[\CHKL@codestyle]{#1}%
+    \egroup%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{environment}{chklisting}
+% \begin{macro}{\chklistingcurrfile}
 % This is the main environment for including source code.
-% This macro works in two parts:
+% This implementation has two parts:
 % \begin{enumerate}
 % \item
 % It uses the listings package to write the code to a file,
@@ -899,6 +957,9 @@ let w = u + "four"
 % The |listings| package allows the definition of custom verbatim 
 % environments.
 % This one has a single argument (a list of |keyval| options).
+%
+% The |\chklistingcurrfile| macro is set to the filename of the most recent 
+% file created by the environment.
 %
 %    \begin{macrocode}
 \lstnewenvironment{chklisting}[1][]
@@ -948,11 +1009,14 @@ let w = u + "four"
     \def\CHKL@file{\CHKL@subdir/\CHKL@prefix\CHKL@num}%
 %    \end{macrocode}
 %
+% Set the |\chklistingcurrfile| macro to the name of the file created for 
+% this environment, both for use internally and externally.
 % Clear the definitions used to return information about the compilation 
 % run, and close the environment by opening a file, using the |listings| 
 % package, into which to write the ensuing contents.
 %
 %    \begin{macrocode}
+    \global\edef\chklistingcurrfile{\CHKL@file\CHKL@ext}%
     \global\let\chklistingcmd\@undefined%
     \global\let\FV@SV@ChkListingMsg\@undefined%
     \global\let\FV@SV@ChkListingErr\@undefined%
@@ -971,19 +1035,10 @@ let w = u + "four"
     \egroup%
 %    \end{macrocode}
 %
-% If |hide| is not active, apply |\CHKL@verbopts| and reload the newly 
-% created file.
+% If |hide| is not active, then load the newly created file.
 %
 %    \begin{macrocode}
-    \ifCHKL@showcode%
-        \bgroup%
-        \ifx\CHKL@codelst\CHKL@emptyoption\else%
-          \expandafter\lstset\expandafter{\CHKL@codelst,fancyvrb=true}%
-        \fi%
-        \expandafter\fvset\expandafter{\CHKL@verbopts}%
-        \expandafter\VerbatimInput\expandafter[\CHKL@codestyle]{\CHKL@file\CHKL@ext}%
-        \egroup%
-    \fi%
+    \ifCHKL@showcode\chklistinginput{\CHKL@file\CHKL@ext}\fi%
 %    \end{macrocode}
 %
 % Check whether a corresponding |.tex| file was created:
@@ -1070,6 +1125,7 @@ let w = u + "four"
     }%
   }%
 %    \end{macrocode}
+% \end{macro}
 % \end{environment}
 %
 \makeatother
